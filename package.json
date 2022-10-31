@@ -1,0 +1,36 @@
+{
+  "name": "squeeze",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.9.3",
+    "@emotion/styled": "^11.9.3",
+    "@fontsource/baloo-2": "^4.5.8",
+    "@fontsource/roboto": "^4.5.7",
+    "@fontsource/ubuntu": "^4.5.10",
+    "@mui/icons-material": "^5.8.4",
+    "@mui/material": "^5.9.0",
+    "@mui/styles": "^5.9.0",
+    "client-zip": "^2.2.2",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-mui-dropzone": "^4.0.6"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.18.6",
+    "@types/react": "^18.0.15",
+    "@types/react-dom": "^18.0.6",
+    "@vitejs/plugin-react": "^2.0.0",
+    "prop-types": "^15.8.1",
+    "typescript": "^4.6.4",
+    "vite": "^3.0.7",
+    "vite-plugin-pwa": "^0.12.3",
+    "workbox-window": "^6.5.4"
+  }
+}
