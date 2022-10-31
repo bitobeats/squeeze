@@ -106,7 +106,11 @@ export default memo(function FAQ() {
                 </FAQItem>
                 <FAQItem title="Where can I get help?">
                     <Typography>
-                        Go to this GitHub page and open an issue. We’ll try to answer you as soon as we can =]
+                        Go to this{" "}
+                        <a href="https://github.com/vitorrloureiro/squeeze" style={{ color: "white" }}>
+                            GitHub page
+                        </a>{" "}
+                        and open an issue. We’ll try to answer you as soon as we can =]
                     </Typography>
                 </FAQItem>
                 <FAQItem title="Can I be part of it?">
