@@ -1,5 +1,6 @@
 import type { CompSettings, TransparentBackgroundColor } from "../../logic/settings-manager";
-import { useEffect, memo } from "react";
+
+import { memo } from "react";
 import {
     Typography,
     Divider,
@@ -81,13 +82,11 @@ function Settings({
     const widthError = isNaN(Number(settWidth));
     const heightError = isNaN(Number(settHeight));
 
-    useEffect(() => {
-        if (widthError || heightError) {
-            setCanClose!(false);
-        } else {
-            setCanClose!(true);
-        }
-    }, [settWidth, settHeight]);
+    if (widthError || heightError) {
+        setCanClose!(false);
+    } else {
+        setCanClose!(true);
+    }
 
     return (
         <ThemeProvider theme={settingsTheme}>
