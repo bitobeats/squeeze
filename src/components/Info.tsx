@@ -9,7 +9,7 @@ function Info() {
                 but with great <b>quality.</b>
             </Typography>
             <Typography variant="h2" marginBottom={10} marginTop={10}>
-                Compress multiple images at once. <b>It's free.</b>
+                Compress multiple images at once. <b>{"It's free."}</b>
             </Typography>
             <Container
                 sx={{
@@ -23,7 +23,7 @@ function Info() {
                 <LockIcon
                     sx={{
                         fontSize: { xs: "clamp(30px, 15vw, 100px)", md: 150 },
-                        color: "white"
+                        color: "white",
                     }}
                 />
                 <Typography

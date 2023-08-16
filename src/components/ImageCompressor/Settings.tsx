@@ -1,5 +1,6 @@
 import type { CompSettings, TransparentBackgroundColor } from "../../logic/settings-manager";
-import { useEffect, memo } from "react";
+
+import { memo } from "react";
 import {
     Typography,
     Divider,
@@ -19,7 +20,7 @@ import {
 
 import ImageQualitySlider from "./ImageQualitySlider";
 
-import { greenButtonTheme, blackTheme, redTheme } from "../../themes";
+import { greenButtonTheme, blackTheme } from "../../themes";
 
 const settingsTheme = createTheme({
     typography: {
@@ -61,7 +62,6 @@ export interface SettingsProps {
 
 function Settings({
     handleClose,
-    settings,
     setCanClose,
     sliderValue,
     setSliderValue,
@@ -82,13 +82,11 @@ function Settings({
     const widthError = isNaN(Number(settWidth));
     const heightError = isNaN(Number(settHeight));
 
-    useEffect(() => {
-        if (widthError || heightError) {
-            setCanClose!(false);
-        } else {
-            setCanClose!(true);
-        }
-    }, [settWidth, settHeight]);
+    if (widthError || heightError) {
+        setCanClose!(false);
+    } else {
+        setCanClose!(true);
+    }
 
     return (
         <ThemeProvider theme={settingsTheme}>
@@ -187,7 +185,7 @@ function Settings({
                                         control={
                                             <Switch
                                                 checked={keepSettings}
-                                                onChange={(e) => {
+                                                onChange={() => {
                                                     setKeepSettings((val) => !val);
                                                 }}
                                             />

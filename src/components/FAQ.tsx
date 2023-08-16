@@ -55,7 +55,7 @@ export default memo(function FAQ() {
                         same compression settings 99% of the time, only changing the dimensions and the compression
                         quality. That’s why we made Squeeze: Squeeze supports multiple image processing at once. Squeeze
                         has very few settings - it only supports jpeg, and you can only set the compression quality
-                        level, the dimensions and the naming of the image files."{" "}
+                        level, the dimensions and the naming of the image files.
                     </Typography>
                 </FAQItem>
                 <FAQItem title="How was it made?">
@@ -134,7 +134,7 @@ export default memo(function FAQ() {
                                 <Typography>• Safe</Typography>
                             </li>
                             <li>
-                                <Typography>• "Client-side"</Typography>
+                                <Typography>• Client-side</Typography>
                             </li>
                             <li>
                                 <Typography>• Offline ready</Typography>
