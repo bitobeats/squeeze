@@ -1,10 +1,11 @@
 /// <reference lib="webworker" />
+import type { MozJPEGModule } from "../libs/squoosh/codecs/mozjpeg/enc/mozjpeg_enc";
 
 import mozEnc, { EncodeOptions } from "../libs/squoosh/codecs/mozjpeg/enc/mozjpeg_enc";
 import initResize, { resize } from "../libs/squoosh/codecs/resize/pkg/squoosh_resize";
 import resizeWasm from "../libs/squoosh/codecs/resize/pkg/squoosh_resize_bg.wasm?url";
 
-let module: any;
+let module: MozJPEGModule;
 let isLoaded = false;
 
 /**
@@ -149,7 +150,7 @@ export const resizeImage = async (
 
     opts = opts ? Object.assign(defaultOpts, opts) : defaultOpts;
 
-    let uintArray = resize(
+    const uintArray = resize(
         //@ts-ignore
         image,
         imageWidth,
@@ -200,9 +201,6 @@ function _getResizingDimensions(
         newHeight = maxHeight;
         newWidth = Math.round(originalWidth * (newHeight / originalHeight));
     }
-
-    newWidth = newWidth;
-    newHeight = newHeight;
 
     return { newWidth: newWidth, newHeight: newHeight };
 }

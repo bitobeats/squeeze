@@ -37,7 +37,7 @@ function CompActions({ getDeliverableImages, importedFiles }: CompActionsProps) 
                 <Button
                     startIcon={<SettingsIcon />}
                     ref={settingsAnchor}
-                    onClick={(e) => {
+                    onClick={() => {
                         setIsSettingsOpen(true);
                     }}
                     sx={{ color: "white" }}>

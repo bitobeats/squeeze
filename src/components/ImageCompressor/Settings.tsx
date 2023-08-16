@@ -19,7 +19,7 @@ import {
 
 import ImageQualitySlider from "./ImageQualitySlider";
 
-import { greenButtonTheme, blackTheme, redTheme } from "../../themes";
+import { greenButtonTheme, blackTheme } from "../../themes";
 
 const settingsTheme = createTheme({
     typography: {
@@ -61,7 +61,6 @@ export interface SettingsProps {
 
 function Settings({
     handleClose,
-    settings,
     setCanClose,
     sliderValue,
     setSliderValue,
@@ -187,7 +186,7 @@ function Settings({
                                         control={
                                             <Switch
                                                 checked={keepSettings}
-                                                onChange={(e) => {
+                                                onChange={() => {
                                                     setKeepSettings((val) => !val);
                                                 }}
                                             />

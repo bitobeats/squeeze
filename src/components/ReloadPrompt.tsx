@@ -1,14 +1,6 @@
-import {
-    Button,
-    IconButton,
-    Snackbar,
-    createTheme,
-    ThemeProvider,
-    Alert
-} from "@mui/material";
+import { Button, IconButton, Snackbar, createTheme, ThemeProvider, Alert } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { useRegisterSW } from "virtual:pwa-register/react";
-
 
 const downloadButtonTheme = createTheme({
     palette: {
@@ -19,47 +11,42 @@ const downloadButtonTheme = createTheme({
 });
 
 export default function ReloadPrompt() {
-
     const {
         offlineReady: [offlineReady, setOfflineReady],
         needRefresh: [needRefresh, setNeedRefresh],
         updateServiceWorker,
     } = useRegisterSW({
-        onRegistered(r) {
+        onRegistered() {
             // eslint-disable-next-line prefer-template
-
         },
-        onRegisterError(error) {
-
-        },
-    })
+        onRegisterError() {},
+    });
 
     const handleClick = async () => {
-        await updateServiceWorker(true)
-        handleClose()
-    }
+        await updateServiceWorker(true);
+        handleClose();
+    };
     const handleClose = () => {
-        setOfflineReady(false)
-        setNeedRefresh(false)
-    }
+        setOfflineReady(false);
+        setNeedRefresh(false);
+    };
     const popupMessage = () => {
-        let message = ""
+        let message = "";
         if (offlineReady) {
-            message = "Ready to work offline!"
+            message = "Ready to work offline!";
         } else {
-            message = "New update available!"
+            message = "New update available!";
         }
-        return message
-    }
-
+        return message;
+    };
 
     const action = (
         <>
-            {needRefresh &&
+            {needRefresh && (
                 <ThemeProvider theme={downloadButtonTheme}>
                     <Button onClick={handleClick}>Install</Button>
                 </ThemeProvider>
-            }
+            )}
 
             <IconButton onClick={handleClose} sx={{ color: "white" }}>
                 <CloseIcon fontSize="small" />
@@ -76,8 +63,12 @@ export default function ReloadPrompt() {
             onClose={handleClose}
             sx={{
                 marginBottom: "env(safe-area-inset-bottom)",
-            }}
-            children={offlineReady ? <Alert onClose={handleClose} severity="success">{popupMessage()}</Alert> : undefined}
-        />
+            }}>
+            {offlineReady ? (
+                <Alert onClose={handleClose} severity="success">
+                    {popupMessage()}
+                </Alert>
+            ) : undefined}
+        </Snackbar>
     );
 }

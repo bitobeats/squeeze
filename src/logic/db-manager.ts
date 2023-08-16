@@ -72,13 +72,13 @@ export class GeneralDB {
      * @returns An empty Promise.
      */
     async clear(storeName: string) {
-        return new Promise<null>(async (res, rej) => {
-            const store = await this.#getStore(storeName, "readwrite");
+        return new Promise<null>((res, rej) => {
+            this.#getStore(storeName, "readwrite").then((store) => {
+                const request = store.clear();
 
-            const request = store.clear();
-
-            request.onerror = (e) => rej(e);
-            request.onsuccess = () => res(null);
+                request.onerror = (e) => rej(e);
+                request.onsuccess = () => res(null);
+            });
         });
     }
 
@@ -89,15 +89,15 @@ export class GeneralDB {
      * @returns The value from the key.
      */
     async read<Type>(query: IDBValidKey | IDBKeyRange, storeName: string): Promise<Type> {
-        return new Promise(async (res, rej) => {
-            const store = await this.#getStore(storeName, "readonly");
+        return new Promise((res, rej) => {
+            this.#getStore(storeName, "readonly").then((store) => {
+                const request = store.get(query);
 
-            const request = store.get(query);
-
-            request.onerror = (e) => rej(e);
-            request.onsuccess = () => {
-                res(request.result);
-            };
+                request.onerror = (e) => rej(e);
+                request.onsuccess = () => {
+                    res(request.result);
+                };
+            });
         });
     }
 
@@ -107,15 +107,15 @@ export class GeneralDB {
      * @returns A Promise containing all the data of a store.
      */
     async readAll(storeName: string) {
-        return new Promise(async (res, rej) => {
-            const store = await this.#getStore(storeName, "readonly");
+        return new Promise((res, rej) => {
+            this.#getStore(storeName, "readonly").then((store) => {
+                const request = store.getAll();
 
-            const request = store.getAll();
-
-            request.onerror = (e) => rej(e);
-            request.onsuccess = () => {
-                res(request.result);
-            };
+                request.onerror = (e) => rej(e);
+                request.onsuccess = () => {
+                    res(request.result);
+                };
+            });
         });
     }
 
@@ -127,15 +127,15 @@ export class GeneralDB {
      * @returns An empty Promise.
      */
     async write<Type>(obj: Type, id: string, storeName: string): Promise<null> {
-        return new Promise(async (res, rej) => {
-            const store = await this.#getStore(storeName, "readwrite");
+        return new Promise((res, rej) => {
+            this.#getStore(storeName, "readwrite").then((store) => {
+                const request = store.add(obj, id);
 
-            const request = store.add(obj, id);
-
-            request.onerror = (e) => rej(e);
-            request.onsuccess = () => {
-                res(null);
-            };
+                request.onerror = (e) => rej(e);
+                request.onsuccess = () => {
+                    res(null);
+                };
+            });
         });
     }
 
@@ -147,15 +147,15 @@ export class GeneralDB {
      * @returns A promise after the proccess is completed.
      */
     async update(obj: object, key: string, storeName: string): Promise<null> {
-        return new Promise(async (res, rej) => {
-            const store = await this.#getStore(storeName, "readwrite");
+        return new Promise((res, rej) => {
+            this.#getStore(storeName, "readwrite").then((store) => {
+                const request = store.put(obj, key);
 
-            const request = store.put(obj, key);
-
-            request.onerror = (e) => rej(e);
-            request.onsuccess = () => {
-                res(null);
-            };
+                request.onerror = (e) => rej(e);
+                request.onsuccess = () => {
+                    res(null);
+                };
+            });
         });
     }
 }

@@ -67,8 +67,7 @@ export function useDeliverableImages() {
             clearInterval(elapsedTimeTimer);
         });
 
-        //@ts-ignore
-        if (window.navigator.standalone === true) {
+        if ("standalone" in window.navigator === true) {
             return;
         } else {
             resultsLink.click();
@@ -79,8 +78,7 @@ export function useDeliverableImages() {
      * Deliver images that are alerady processed.
      */
     const deliverImages = useCallback(() => {
-        //@ts-ignore
-        if (window.navigator.standalone === true) {
+        if ("standalone" in window.navigator === true) {
             try {
                 navigator.share({ files: processedImages! });
             } catch {

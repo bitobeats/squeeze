@@ -39,7 +39,7 @@ export function useSettings(): [CompSettings, (newSettings: CompSettings) => Com
                     setSettings({ ...result });
                 }
             })
-            .catch((e) => null);
+            .catch(() => null);
     }, []);
 
     /**
