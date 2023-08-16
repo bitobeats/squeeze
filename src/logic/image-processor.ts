@@ -235,29 +235,14 @@ async function processImages(
     const imgEl = new Image();
     const fr = new FileReader();
 
-    let innerTotalTasks = images.length;
     let innerTaskCounter = 0;
 
     const options = {
         quality: settings.quality ? settings.quality : 75,
     };
 
-    const workerMessageHandler = new Promise(async (res, rej) => {
-        encodeWorker.onmessage = (message: MessageEvent<WorkerCallPost>) => {
-            processedImages.push(
-                new File([message.data.imageBuffer], message.data.finalFilename + ".jpeg", { type: "image/jpeg" })
-            );
-
-            innerTaskCounter++;
-            setCompletedTask(innerTaskCounter);
-
-            if (innerTaskCounter >= innerTotalTasks) {
-                res(null);
-            }
-        };
-    });
-
-    for await (const file of images) {
+    for (const file of images) {
+        console.log("Started processing image");
         const { image, imageWidth, imageHeight } = await loadImage(
             file,
             imgEl,
@@ -289,9 +274,22 @@ async function processImages(
             } as WorkerCallMessage,
             [image]
         );
-    }
 
-    await workerMessageHandler;
+        await new Promise((res) => {
+            encodeWorker.onmessage = (message: MessageEvent<WorkerCallPost>) => {
+                processedImages.push(
+                    new File([message.data.imageBuffer], message.data.finalFilename + ".jpeg", { type: "image/jpeg" })
+                );
+
+                innerTaskCounter++;
+                setCompletedTask(innerTaskCounter);
+
+                res(null);
+            };
+        });
+
+        console.log("Finished processing image");
+    }
 
     canvas.remove();
     imgEl.remove();
