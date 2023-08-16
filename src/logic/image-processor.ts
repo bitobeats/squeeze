@@ -240,7 +240,6 @@ async function processImages(
     };
 
     for (const file of images) {
-        console.log("Started processing image");
         const { image, imageWidth, imageHeight } = await loadImage(
             file,
             imgEl,
@@ -260,6 +259,19 @@ async function processImages(
             finalFilename = finalFilename + settings.sufix;
         }
 
+        const encodeWorkerPromise = new Promise((res) => {
+            encodeWorker.onmessage = (message: MessageEvent<WorkerCallPost>) => {
+                processedImages.push(
+                    new File([message.data.imageBuffer], message.data.finalFilename + ".jpeg", { type: "image/jpeg" })
+                );
+
+                innerTaskCounter++;
+                setCompletedTask(innerTaskCounter);
+
+                res(null);
+            };
+        });
+
         encodeWorker.postMessage(
             {
                 imageBuffer: image,
@@ -273,20 +285,7 @@ async function processImages(
             [image]
         );
 
-        await new Promise((res) => {
-            encodeWorker.onmessage = (message: MessageEvent<WorkerCallPost>) => {
-                processedImages.push(
-                    new File([message.data.imageBuffer], message.data.finalFilename + ".jpeg", { type: "image/jpeg" })
-                );
-
-                innerTaskCounter++;
-                setCompletedTask(innerTaskCounter);
-
-                res(null);
-            };
-        });
-
-        console.log("Finished processing image");
+        await encodeWorkerPromise;
     }
 
     canvas.remove();
