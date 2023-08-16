@@ -54,6 +54,7 @@ function SettingsPopover({
         setSettHeight(String(settings.height));
         setSettPrefix(String(settings.prefix));
         setSettSufix(String(settings.sufix));
+        setSliderValue(settings.quality);
         setTransparentBackgroundColor(settings.transparentBackgroundColor);
         setKeepSettings(settings.keepSettings);
     }, [settings]);
