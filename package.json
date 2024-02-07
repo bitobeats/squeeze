@@ -9,32 +9,32 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@emotion/react": "^11.11.0",
+    "@emotion/react": "^11.11.3",
     "@emotion/styled": "^11.11.0",
-    "@fontsource/baloo-2": "^5.0.8",
+    "@fontsource/baloo-2": "^5.0.18",
     "@fontsource/roboto": "^5.0.8",
     "@fontsource/ubuntu": "^5.0.8",
-    "@mui/icons-material": "^5.14.3",
-    "@mui/material": "^5.14.3",
-    "@mui/styles": "^5.14.3",
+    "@mui/icons-material": "^5.15.8",
+    "@mui/material": "^5.15.7",
+    "@mui/styles": "^5.15.8",
     "client-zip": "^2.4.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-mui-dropzone": "^4.0.6"
+    "react-mui-dropzone": "^4.0.7"
   },
   "devDependencies": {
-    "@babel/core": "^7.22.9",
-    "@types/react": "^18.2.18",
-    "@types/react-dom": "^18.2.7",
-    "@typescript-eslint/eslint-plugin": "^6.4.0",
-    "@typescript-eslint/parser": "^6.4.0",
-    "@vitejs/plugin-react": "^4.0.4",
-    "eslint": "^8.47.0",
+    "@babel/core": "^7.23.9",
+    "@types/react": "^18.2.55",
+    "@types/react-dom": "^18.2.18",
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/parser": "^6.21.0",
+    "@vitejs/plugin-react": "^4.2.1",
+    "eslint": "^8.56.0",
     "eslint-plugin-react": "^7.33.2",
     "prop-types": "^15.8.1",
-    "typescript": "^5.1.6",
-    "vite": "^4.4.8",
-    "vite-plugin-pwa": "^0.16.4",
+    "typescript": "^5.3.3",
+    "vite": "^4.5.2",
+    "vite-plugin-pwa": "^0.16.7",
     "workbox-window": "^7.0.0"
   }
 }
