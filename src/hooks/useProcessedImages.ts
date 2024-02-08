@@ -1,4 +1,4 @@
-import type { CompSettings } from "../logic/settings-manager";
+import type { CompSettings } from "../types/CompSettings";
 
 import { useState, startTransition } from "react";
 import { processImages } from "./utils/processImages";

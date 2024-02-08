@@ -1,4 +1,4 @@
-import type { TransparentBackgroundColor } from "../../logic/settings-manager";
+import type { TransparentBackgroundColor } from "../../types/TransparentBackgroundColor";
 
 /**
  * Loads an image with the Canvas element and returns its ArrayBuffer together

@@ -1,4 +1,4 @@
-import type { CompSettings } from "../logic/settings-manager";
+import type { CompSettings } from "../types/CompSettings";
 
 import { useState, startTransition, useCallback } from "react";
 

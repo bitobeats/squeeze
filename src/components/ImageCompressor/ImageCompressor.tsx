@@ -1,4 +1,5 @@
-import type { CompSettings } from "../../logic/settings-manager";
+import type { CompSettings } from "../../types/CompSettings";
+
 import { useState, useCallback, lazy, Suspense } from "react";
 import { Container, Typography, CircularProgress } from "@mui/material";
 

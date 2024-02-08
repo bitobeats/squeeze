@@ -1,7 +1,7 @@
-import type { CompSettings } from "../../logic/settings-manager";
-import type { WorkerCallMessage, WorkerCallPost } from "../../logic/worker-image-processor";
+import type { CompSettings } from "../../types/CompSettings";
+import type { WorkerCallMessage, WorkerCallPost } from "../../image-processor/worker-image-processor";
 
-import EncodeWorker from "../../logic/worker-image-processor?worker";
+import EncodeWorker from "../../image-processor/worker-image-processor?worker";
 import { loadImage } from "./loadImage";
 
 /**
