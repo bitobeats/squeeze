@@ -14,7 +14,7 @@ import type { TransparentBackgroundColor } from "../../types/TransparentBackgrou
 export async function loadImage(
   file: File,
   imgEl: HTMLImageElement,
-  canvas: HTMLCanvasElement,
+  ctx: CanvasRenderingContext2D,
   fr: FileReader,
   transparentBackgroundColor: TransparentBackgroundColor
 ) {
@@ -37,14 +37,13 @@ export async function loadImage(
 
   // Make canvas same size as image
 
-  [canvas.width, canvas.height] = [imgWidth, imgHeight];
+  [ctx.canvas.width, ctx.canvas.height] = [imgWidth, imgHeight];
   // Draw image onto canvas
-  const ctx = canvas.getContext("2d");
-  ctx!.fillStyle = transparentBackgroundColor;
-  ctx!.fillRect(0, 0, imgWidth, imgHeight);
-  ctx!.drawImage(imgEl, 0, 0, imgWidth, imgHeight);
+  ctx.fillStyle = transparentBackgroundColor;
+  ctx.fillRect(0, 0, imgWidth, imgHeight);
+  ctx.drawImage(imgEl, 0, 0, imgWidth, imgHeight);
   const imageBuffer = ctx!.getImageData(0, 0, imgWidth, imgHeight).data.buffer;
-  ctx!.clearRect(0, 0, 0, 0);
+  ctx.clearRect(0, 0, imgWidth, imgHeight);
 
   return {
     image: imageBuffer,

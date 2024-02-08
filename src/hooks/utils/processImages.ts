@@ -23,6 +23,11 @@ export async function processImages(
   const canvas = document.createElement("canvas");
   const imgEl = new Image();
   const fr = new FileReader();
+  const ctx = canvas.getContext("2d");
+
+  if (!ctx) {
+    throw new Error("Couldn't get canvas context");
+  }
 
   let innerTaskCounter = 0;
 
@@ -34,7 +39,7 @@ export async function processImages(
     const { image, imageWidth, imageHeight } = await loadImage(
       file,
       imgEl,
-      canvas,
+      ctx,
       fr,
       settings.transparentBackgroundColor
     );
