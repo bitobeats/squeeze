@@ -25,7 +25,7 @@ export function useDeliverableImages() {
   const getDeliverableImages = async (images: File[], settings: CompSettings) => {
     const startTime = new Date();
 
-    if (images.length === 0) {
+    if (!images.length) {
       alert("You have to select some images to compress first!");
       return;
     }
@@ -79,15 +79,7 @@ export function useDeliverableImages() {
    * Deliver images that are alerady processed.
    */
   const deliverImages = useCallback(() => {
-    if ("standalone" in window.navigator === true) {
-      try {
-        navigator.share({ files: processedImages! });
-      } catch {
-        downloadLink?.click();
-      }
-    } else {
-      downloadLink?.click();
-    }
+    downloadLink?.click();
   }, [downloadReady]);
 
   /**
