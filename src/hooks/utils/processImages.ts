@@ -2,7 +2,6 @@ import type { CompSettings } from "../../types/CompSettings";
 import type { WorkerCallMessage, WorkerCallPost } from "../../image-processor/worker-image-processor";
 
 import EncodeWorker from "../../image-processor/worker-image-processor?worker";
-import { loadImage } from "./loadImage";
 
 export async function processImages(
   images: File[],
@@ -12,12 +11,6 @@ export async function processImages(
   const processedImages: File[] = [];
 
   const encodeWorker = new EncodeWorker();
-  const canvas = new OffscreenCanvas(0, 0);
-  const ctx = canvas.getContext("2d");
-
-  if (!ctx) {
-    throw new Error("Couldn't get canvas context");
-  }
 
   let innerTaskCounter = 0;
 
@@ -26,7 +19,7 @@ export async function processImages(
   };
 
   for (const file of images) {
-    const { imageBuffer, imageWidth, imageHeight } = await loadImage(file, ctx, settings.transparentBackgroundColor);
+    const imageBitmap = await createImageBitmap(file);
 
     const finalFilename = getFinalFilename(file, settings.prefix, settings.sufix);
 
@@ -40,16 +33,16 @@ export async function processImages(
     });
 
     const workerCallMessage: WorkerCallMessage = {
-      imageBuffer,
+      imageBitmap,
       opts: options,
-      oldWidth: imageWidth,
-      oldHeight: imageHeight,
+      oldWidth: imageBitmap.width,
+      oldHeight: imageBitmap.height,
       settWidth: settings.width,
       settHeight: settings.height,
       finalFilename,
     };
 
-    encodeWorker.postMessage(workerCallMessage, [imageBuffer]);
+    encodeWorker.postMessage(workerCallMessage, [imageBitmap]);
 
     processedImages.push(await encodeWorkerPromise);
   }
