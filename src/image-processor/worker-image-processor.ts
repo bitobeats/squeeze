@@ -98,7 +98,7 @@ onmessage = async (message: MessageEvent<WorkerCallMessage>) => {
   postMessage(response, [response.imageBuffer]);
 };
 
-export const encodeJpeg = async (image: Uint8ClampedArray, width: number, height: number, opts: EncodeJpegOpts) => {
+async function encodeJpeg(image: Uint8ClampedArray, width: number, height: number, opts: EncodeJpegOpts) {
   const defaultOpts: EncodeJpegOpts = {
     quality: 75,
     baseline: false,
@@ -122,7 +122,7 @@ export const encodeJpeg = async (image: Uint8ClampedArray, width: number, height
 
   const result = module.encode(image, width, height, opts as EncodeOptions);
   return result;
-};
+}
 
 function getResizingDimensions(
   originalWidth: number,
