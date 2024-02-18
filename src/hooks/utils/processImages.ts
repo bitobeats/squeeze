@@ -17,12 +17,10 @@ export async function processImages(
   settings: CompSettings,
   setCompletedTask: React.Dispatch<React.SetStateAction<number>>
 ) {
-  const processedImages = [] as File[];
+  const processedImages: File[] = [];
 
   const encodeWorker = new EncodeWorker();
   const canvas = document.createElement("canvas");
-  const imgEl = new Image();
-  const fr = new FileReader();
   const ctx = canvas.getContext("2d");
 
   if (!ctx) {
@@ -36,13 +34,7 @@ export async function processImages(
   };
 
   for (const file of images) {
-    const { image, imageWidth, imageHeight } = await loadImage(
-      file,
-      imgEl,
-      ctx,
-      fr,
-      settings.transparentBackgroundColor
-    );
+    const { imageBuffer, imageWidth, imageHeight } = await loadImage(file, ctx, settings.transparentBackgroundColor);
 
     // Handles prefix and sufix
     let finalFilename = file.name.substring(0, file.name.lastIndexOf("."));
@@ -70,7 +62,7 @@ export async function processImages(
 
     encodeWorker.postMessage(
       {
-        imageBuffer: image,
+        imageBuffer,
         opts: options,
         oldWidth: imageWidth,
         oldHeight: imageHeight,
@@ -78,14 +70,13 @@ export async function processImages(
         settHeight: settings.height,
         finalFilename: finalFilename,
       } as WorkerCallMessage,
-      [image]
+      [imageBuffer]
     );
 
     await encodeWorkerPromise;
   }
 
   canvas.remove();
-  imgEl.remove();
   encodeWorker.terminate();
 
   return processedImages;
