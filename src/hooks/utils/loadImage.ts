@@ -2,7 +2,7 @@ import type { TransparentBackgroundColor } from "../../types/TransparentBackgrou
 
 export async function loadImage(
   file: File,
-  ctx: CanvasRenderingContext2D,
+  ctx: OffscreenCanvasRenderingContext2D,
   transparentBackgroundColor: TransparentBackgroundColor
 ) {
   const imageBitmap = await createImageBitmap(file);

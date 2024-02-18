@@ -20,7 +20,7 @@ export async function processImages(
   const processedImages: File[] = [];
 
   const encodeWorker = new EncodeWorker();
-  const canvas = document.createElement("canvas");
+  const canvas = new OffscreenCanvas(0, 0);
   const ctx = canvas.getContext("2d");
 
   if (!ctx) {
@@ -76,7 +76,6 @@ export async function processImages(
     await encodeWorkerPromise;
   }
 
-  canvas.remove();
   encodeWorker.terminate();
 
   return processedImages;
