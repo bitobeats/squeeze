@@ -126,6 +126,10 @@ function getResizingDimensions(
   maxWidth: number = 0,
   maxHeight: number = 0
 ) {
+  if (!maxWidth && !maxHeight) {
+    return { newWidth: originalWidth, newHeight: originalHeight };
+  }
+
   let [newWidth, newHeight] = [maxWidth, maxHeight];
 
   if (maxWidth === 0) {
