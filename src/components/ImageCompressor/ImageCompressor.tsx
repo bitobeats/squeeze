@@ -12,9 +12,6 @@ const StatusIndicator = lazy(() => import("./StatusIndicator"));
 const filesLimit = 32;
 
 function ImageCompressor() {
-  // General
-
-  // Files
   const [importedFiles, setImportedFiles] = useState<Array<File> | null>(null);
   const {
     deliverImages,
@@ -27,7 +24,6 @@ function ImageCompressor() {
     elapsedTime,
   } = useDeliverableImages();
 
-  // Memos
   const memoGetDeliverableImages = useCallback(
     (images: File[], settings: CompSettings) => {
       getDeliverableImages(images, settings);

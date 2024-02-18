@@ -2,11 +2,6 @@
 import type { MozJPEGModule } from "../libs/squoosh/codecs/mozjpeg/enc/mozjpeg_enc";
 
 import mozEnc, { EncodeOptions } from "../libs/squoosh/codecs/mozjpeg/enc/mozjpeg_enc";
-import initResize, { resize } from "../libs/squoosh/codecs/resize/pkg/squoosh_resize";
-import resizeWasm from "../libs/squoosh/codecs/resize/pkg/squoosh_resize_bg.wasm?url";
-
-let module: MozJPEGModule;
-let isLoaded = false;
 
 /**
  * An interface representing the mozEnc.encode() options.
@@ -31,20 +26,10 @@ type EncodeJpegOpts = {
 };
 
 /**
- * An interface representing the resizeWams.resize() options.
- */
-type ResizeJpegOpts = {
-  method: number;
-  fitMethod: string;
-  premultiply: boolean;
-  linearRGB: boolean;
-};
-
-/**
  * An interface representing the message that the web worker receives.
  */
 export type WorkerCallMessage = {
-  imageBuffer: ArrayBuffer;
+  imageBitmap: ImageBitmap;
   opts: EncodeJpegOpts;
   oldWidth: number;
   oldHeight: number;
@@ -62,32 +47,36 @@ export type WorkerCallPost = {
   height: number;
   finalFilename: string;
 };
+
+let module: MozJPEGModule;
+let isLoaded = false;
+
+const canvas = new OffscreenCanvas(0, 0);
+const ctx = canvas.getContext("2d", { antialias: true, premultipliedAlpha: true });
+
 onmessage = async (message: MessageEvent<WorkerCallMessage>) => {
   const data = message.data;
-  let finalWidth = data.oldWidth;
-  let finalHeight = data.oldHeight;
+  const { newWidth: finalWidth, newHeight: finalHeight } = getResizingDimensions(
+    data.oldWidth,
+    data.oldHeight,
+    data.settWidth,
+    data.settHeight
+  );
   const finalFileName = data.finalFilename;
 
-  let imageToProcess = new Uint8ClampedArray(data.imageBuffer);
-
-  if (data.settHeight !== 0 || data.settWidth !== 0) {
-    const { newWidth, newHeight } = _getResizingDimensions(
-      data.oldWidth,
-      data.oldHeight,
-      data.settWidth,
-      data.settHeight
-    );
-
-    finalWidth = newWidth;
-    finalHeight = newHeight;
-
-    if (!isLoaded) {
-      await initResize(resizeWasm);
-    }
-
-    const resizedImage = await resizeImage(imageToProcess, data.oldWidth, data.oldHeight, finalWidth, finalHeight);
-    imageToProcess = resizedImage;
+  if (!ctx) {
+    throw new Error("Couldn't load offscreen canvas");
   }
+
+  [ctx.canvas.width, ctx.canvas.height] = [finalWidth, finalHeight];
+
+  ctx.fillStyle = "white";
+  ctx.fillRect(0, 0, finalWidth, finalHeight);
+  ctx.drawImage(data.imageBitmap, 0, 0, finalWidth, finalHeight);
+  const imageBuffer = ctx.getImageData(0, 0, finalWidth, finalHeight).data.buffer;
+  ctx.clearRect(0, 0, finalWidth, finalHeight);
+
+  const imageToProcess = new Uint8ClampedArray(imageBuffer);
 
   if (!isLoaded) {
     module = await mozEnc();
@@ -133,40 +122,7 @@ export const encodeJpeg = async (image: Uint8ClampedArray, width: number, height
   return result;
 };
 
-export const resizeImage = async (
-  image: Uint8ClampedArray,
-  imageWidth: number,
-  imageHeight: number,
-  outputWidth: number,
-  outputHeight: number,
-  opts?: ResizeJpegOpts
-): Promise<Uint8ClampedArray> => {
-  const defaultOpts = {
-    method: 3, // triangle = 0, catrom = 1, mitchell = 2, lanczos3 = 3
-    fitMethod: "stretch",
-    premultiply: true,
-    linearRGB: true,
-  };
-
-  opts = opts ? Object.assign(defaultOpts, opts) : defaultOpts;
-
-  const uintArray = resize(
-    //@ts-ignore
-    image,
-    imageWidth,
-    imageHeight,
-    outputWidth,
-    outputHeight,
-    opts.method,
-    opts.premultiply,
-    opts.linearRGB
-  );
-
-  return new Uint8ClampedArray(uintArray);
-  // return _Uint8ArrayToBase64(uintArray, outputWidth, outputHeight);
-};
-
-function _getResizingDimensions(
+function getResizingDimensions(
   originalWidth: number,
   originalHeight: number,
   maxWidth: number = 0,
