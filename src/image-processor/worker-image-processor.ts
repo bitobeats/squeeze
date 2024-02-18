@@ -1,5 +1,6 @@
 /// <reference lib="webworker" />
 import type { MozJPEGModule } from "../libs/squoosh/codecs/mozjpeg/enc/mozjpeg_enc";
+import type { TransparentBackgroundColor } from "../types/TransparentBackgroundColor";
 
 import mozEnc, { EncodeOptions } from "../libs/squoosh/codecs/mozjpeg/enc/mozjpeg_enc";
 
@@ -35,7 +36,7 @@ export type WorkerCallMessage = {
   oldHeight: number;
   settWidth: number;
   settHeight: number;
-  finalFilename: string;
+  transparentBackgroundColor: TransparentBackgroundColor;
 };
 
 /**
@@ -45,7 +46,6 @@ export type WorkerCallPost = {
   imageBuffer: ArrayBuffer;
   width: number;
   height: number;
-  finalFilename: string;
 };
 
 let module: MozJPEGModule;
@@ -62,7 +62,6 @@ onmessage = async (message: MessageEvent<WorkerCallMessage>) => {
     data.settWidth,
     data.settHeight
   );
-  const finalFileName = data.finalFilename;
 
   if (!ctx) {
     throw new Error("Couldn't load offscreen canvas");
@@ -70,11 +69,13 @@ onmessage = async (message: MessageEvent<WorkerCallMessage>) => {
 
   [ctx.canvas.width, ctx.canvas.height] = [finalWidth, finalHeight];
 
-  ctx.fillStyle = "white";
+  ctx.fillStyle = message.data.transparentBackgroundColor;
   ctx.fillRect(0, 0, finalWidth, finalHeight);
   ctx.drawImage(data.imageBitmap, 0, 0, finalWidth, finalHeight);
   const imageBuffer = ctx.getImageData(0, 0, finalWidth, finalHeight).data.buffer;
+
   ctx.clearRect(0, 0, finalWidth, finalHeight);
+  message.data.imageBitmap.close();
 
   const imageToProcess = new Uint8ClampedArray(imageBuffer);
 
@@ -90,13 +91,12 @@ onmessage = async (message: MessageEvent<WorkerCallMessage>) => {
     imageBuffer: resultBuffer,
     width: finalWidth,
     height: finalHeight,
-    finalFilename: finalFileName,
   };
 
   postMessage(response, [response.imageBuffer]);
 };
 
-export const encodeJpeg = async (image: Uint8ClampedArray, width: number, height: number, opts: EncodeJpegOpts) => {
+async function encodeJpeg(image: Uint8ClampedArray, width: number, height: number, opts: EncodeJpegOpts) {
   const defaultOpts: EncodeJpegOpts = {
     quality: 75,
     baseline: false,
@@ -120,7 +120,7 @@ export const encodeJpeg = async (image: Uint8ClampedArray, width: number, height
 
   const result = module.encode(image, width, height, opts as EncodeOptions);
   return result;
-};
+}
 
 function getResizingDimensions(
   originalWidth: number,
@@ -128,6 +128,10 @@ function getResizingDimensions(
   maxWidth: number = 0,
   maxHeight: number = 0
 ) {
+  if (!maxWidth && !maxHeight) {
+    return { newWidth: originalWidth, newHeight: originalHeight };
+  }
+
   let [newWidth, newHeight] = [maxWidth, maxHeight];
 
   if (maxWidth === 0) {
