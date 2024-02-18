@@ -1,5 +1,6 @@
 /// <reference lib="webworker" />
 import type { MozJPEGModule } from "../libs/squoosh/codecs/mozjpeg/enc/mozjpeg_enc";
+import type { TransparentBackgroundColor } from "../types/TransparentBackgroundColor";
 
 import mozEnc, { EncodeOptions } from "../libs/squoosh/codecs/mozjpeg/enc/mozjpeg_enc";
 
@@ -36,6 +37,7 @@ export type WorkerCallMessage = {
   settWidth: number;
   settHeight: number;
   finalFilename: string;
+  transparentBackgroundColor: TransparentBackgroundColor;
 };
 
 /**
@@ -70,7 +72,7 @@ onmessage = async (message: MessageEvent<WorkerCallMessage>) => {
 
   [ctx.canvas.width, ctx.canvas.height] = [finalWidth, finalHeight];
 
-  ctx.fillStyle = "white";
+  ctx.fillStyle = message.data.transparentBackgroundColor;
   ctx.fillRect(0, 0, finalWidth, finalHeight);
   ctx.drawImage(data.imageBitmap, 0, 0, finalWidth, finalHeight);
   const imageBuffer = ctx.getImageData(0, 0, finalWidth, finalHeight).data.buffer;

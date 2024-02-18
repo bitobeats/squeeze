@@ -40,6 +40,7 @@ export async function processImages(
       settWidth: settings.width,
       settHeight: settings.height,
       finalFilename,
+      transparentBackgroundColor: settings.transparentBackgroundColor,
     };
 
     encodeWorker.postMessage(workerCallMessage, [imageBitmap]);
