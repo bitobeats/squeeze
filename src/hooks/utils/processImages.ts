@@ -30,16 +30,12 @@ export async function processImages(
 
     const finalFilename = getFinalFilename(file, settings.prefix, settings.sufix);
 
-    const encodeWorkerPromise = new Promise((res) => {
+    const encodeWorkerPromise = new Promise<File>((res) => {
       encodeWorker.onmessage = (message: MessageEvent<WorkerCallPost>) => {
-        processedImages.push(
-          new File([message.data.imageBuffer], message.data.finalFilename + ".jpeg", { type: "image/jpeg" })
-        );
-
         innerTaskCounter++;
         setCompletedTask(innerTaskCounter);
 
-        res(null);
+        res(new File([message.data.imageBuffer], message.data.finalFilename + ".jpeg", { type: "image/jpeg" }));
       };
     });
 
@@ -55,7 +51,7 @@ export async function processImages(
 
     encodeWorker.postMessage(workerCallMessage, [imageBuffer]);
 
-    await encodeWorkerPromise;
+    processedImages.push(await encodeWorkerPromise);
   }
 
   encodeWorker.terminate();
