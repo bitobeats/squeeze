@@ -36,7 +36,6 @@ export type WorkerCallMessage = {
   oldHeight: number;
   settWidth: number;
   settHeight: number;
-  finalFilename: string;
   transparentBackgroundColor: TransparentBackgroundColor;
 };
 
@@ -47,7 +46,6 @@ export type WorkerCallPost = {
   imageBuffer: ArrayBuffer;
   width: number;
   height: number;
-  finalFilename: string;
 };
 
 let module: MozJPEGModule;
@@ -64,7 +62,6 @@ onmessage = async (message: MessageEvent<WorkerCallMessage>) => {
     data.settWidth,
     data.settHeight
   );
-  const finalFileName = data.finalFilename;
 
   if (!ctx) {
     throw new Error("Couldn't load offscreen canvas");
@@ -92,7 +89,6 @@ onmessage = async (message: MessageEvent<WorkerCallMessage>) => {
     imageBuffer: resultBuffer,
     width: finalWidth,
     height: finalHeight,
-    finalFilename: finalFileName,
   };
 
   postMessage(response, [response.imageBuffer]);

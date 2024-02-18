@@ -28,7 +28,7 @@ export async function processImages(
         innerTaskCounter++;
         setCompletedTask(innerTaskCounter);
 
-        res(new File([message.data.imageBuffer], message.data.finalFilename + ".jpeg", { type: "image/jpeg" }));
+        res(new File([message.data.imageBuffer], finalFilename + ".jpeg", { type: "image/jpeg" }));
       };
     });
 
@@ -39,7 +39,6 @@ export async function processImages(
       oldHeight: imageBitmap.height,
       settWidth: settings.width,
       settHeight: settings.height,
-      finalFilename,
       transparentBackgroundColor: settings.transparentBackgroundColor,
     };
 
