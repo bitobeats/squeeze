@@ -73,7 +73,9 @@ onmessage = async (message: MessageEvent<WorkerCallMessage>) => {
   ctx.fillRect(0, 0, finalWidth, finalHeight);
   ctx.drawImage(data.imageBitmap, 0, 0, finalWidth, finalHeight);
   const imageBuffer = ctx.getImageData(0, 0, finalWidth, finalHeight).data.buffer;
+
   ctx.clearRect(0, 0, finalWidth, finalHeight);
+  message.data.imageBitmap.close();
 
   const imageToProcess = new Uint8ClampedArray(imageBuffer);
 
