@@ -4,14 +4,6 @@ import type { WorkerCallMessage, WorkerCallPost } from "../../image-processor/wo
 import EncodeWorker from "../../image-processor/worker-image-processor?worker";
 import { loadImage } from "./loadImage";
 
-/**
- *
- * @param images Images to be processed.
- * @param settings Settings to be used.
- * @param setCompletedTask A React state setter to comunicate with outside
- * code about the state of the process. Definitely not the brightest of the code.
- * @returns A promise containing an array of the processed images.
- */
 export async function processImages(
   images: File[],
   settings: CompSettings,
@@ -30,22 +22,13 @@ export async function processImages(
   let innerTaskCounter = 0;
 
   const options = {
-    quality: settings.quality ? settings.quality : 75,
+    quality: settings.quality ?? 75,
   };
 
   for (const file of images) {
     const { imageBuffer, imageWidth, imageHeight } = await loadImage(file, ctx, settings.transparentBackgroundColor);
 
-    // Handles prefix and sufix
-    let finalFilename = file.name.substring(0, file.name.lastIndexOf("."));
-
-    if (settings.prefix) {
-      finalFilename = settings.prefix + finalFilename;
-    }
-
-    if (settings.sufix) {
-      finalFilename = finalFilename + settings.sufix;
-    }
+    const finalFilename = getFinalFilename(file, settings.prefix, settings.sufix);
 
     const encodeWorkerPromise = new Promise((res) => {
       encodeWorker.onmessage = (message: MessageEvent<WorkerCallPost>) => {
@@ -60,18 +43,17 @@ export async function processImages(
       };
     });
 
-    encodeWorker.postMessage(
-      {
-        imageBuffer,
-        opts: options,
-        oldWidth: imageWidth,
-        oldHeight: imageHeight,
-        settWidth: settings.width,
-        settHeight: settings.height,
-        finalFilename: finalFilename,
-      } as WorkerCallMessage,
-      [imageBuffer]
-    );
+    const workerCallMessage: WorkerCallMessage = {
+      imageBuffer,
+      opts: options,
+      oldWidth: imageWidth,
+      oldHeight: imageHeight,
+      settWidth: settings.width,
+      settHeight: settings.height,
+      finalFilename,
+    };
+
+    encodeWorker.postMessage(workerCallMessage, [imageBuffer]);
 
     await encodeWorkerPromise;
   }
@@ -79,4 +61,18 @@ export async function processImages(
   encodeWorker.terminate();
 
   return processedImages;
+}
+
+function getFinalFilename(file: File, prefix?: string, sufix?: string) {
+  let finalFilename = file.name.substring(0, file.name.lastIndexOf("."));
+
+  if (prefix) {
+    finalFilename = prefix + finalFilename;
+  }
+
+  if (sufix) {
+    finalFilename = finalFilename + sufix;
+  }
+
+  return finalFilename;
 }
