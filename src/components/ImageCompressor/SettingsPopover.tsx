@@ -67,8 +67,8 @@ function SettingsPopover({
       setIsOpen(false);
       saveSettings({
         quality: sliderValue,
-        width: Number(settWidth),
-        height: Number(settHeight),
+        width: parseFloat(settWidth),
+        height: parseFloat(settHeight),
         prefix: settPrefix,
         sufix: settSufix,
         transparentBackgroundColor: transparentBackgroundColor,

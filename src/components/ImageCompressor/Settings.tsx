@@ -150,8 +150,8 @@ function Settings({
           <Divider sx={{ marginBottom: 2, marginTop: 1 }} />
           <ImageQualitySlider
             sliderValue={sliderValue}
-            sliderOnChange={(e, v) => setSliderValue(Number(v))}
-            textOnChange={(e) => setSliderValue(Number(e.target.value))}
+            sliderOnChange={(_, v) => setSliderValue(Number(v))}
+            textOnChange={(e) => setSliderValue(parseFloat(e.target.value))}
           />
         </Box>
 
