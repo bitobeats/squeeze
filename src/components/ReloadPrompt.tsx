@@ -20,30 +20,23 @@ export default function ReloadPrompt() {
     onRegisterError() {},
   });
 
-  const handleClick = async () => {
+  async function handleInstall() {
     await updateServiceWorker(true);
     handleClose();
-  };
-  const handleClose = () => {
+  }
+
+  async function handleClose() {
     setOfflineReady(false);
     setNeedRefresh(false);
-  };
+  }
 
-  const popupMessage = () => {
-    let message = "";
-    if (offlineReady) {
-      message = "Ready to work offline!";
-    } else {
-      message = "New update available!";
-    }
-    return message;
-  };
+  const popupMessage = offlineReady ? "Ready to work offline!" : "New update available!";
 
   const action = (
     <>
       {needRefresh && (
         <ThemeProvider theme={downloadButtonTheme}>
-          <Button onClick={handleClick}>Install</Button>
+          <Button onClick={handleInstall}>Install</Button>
         </ThemeProvider>
       )}
 
@@ -56,7 +49,7 @@ export default function ReloadPrompt() {
   return (
     <Snackbar
       open={offlineReady || needRefresh}
-      message={needRefresh ? popupMessage() : null}
+      message={needRefresh ? popupMessage : null}
       autoHideDuration={null}
       action={action}
       onClose={handleClose}
@@ -65,7 +58,7 @@ export default function ReloadPrompt() {
       }}>
       {offlineReady ? (
         <Alert onClose={handleClose} severity="success">
-          {popupMessage()}
+          {popupMessage}
         </Alert>
       ) : undefined}
     </Snackbar>
