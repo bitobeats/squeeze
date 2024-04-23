@@ -101,6 +101,7 @@ function Settings({
               label="max width"
               error={widthError}
               variant="filled"
+              autoComplete="off"
               value={settWidth === "0" ? "" : settWidth}
               onChange={(e) => setSettWidth(e.target.value)}
               InputProps={{
@@ -112,6 +113,7 @@ function Settings({
               id="settings-height"
               label="max height"
               variant="filled"
+              autoComplete="off"
               error={heightError}
               value={settHeight === "0" ? "" : settHeight}
               onChange={(e) => setSettHeight(e.target.value)}
@@ -130,6 +132,7 @@ function Settings({
               id="settings-prefix"
               label="prefix"
               variant="filled"
+              autoComplete="off"
               value={settPrefix}
               onChange={(e) => setSettPrefix(e.target.value)}
             />
@@ -138,6 +141,7 @@ function Settings({
               id="settings-sufix"
               label="sufix"
               variant="filled"
+              autoComplete="off"
               value={settSufix}
               onChange={(e) => setSettSufix(e.target.value)}
             />
