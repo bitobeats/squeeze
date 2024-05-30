@@ -33,7 +33,7 @@ export class Settings {
     };
     this.settings = { ...this.#defaultSettings };
 
-    this.#db = new GeneralDB("General", version, [{ name: this.#STORE_NAME }]);
+    this.#db = new GeneralDB("squeeze-general", version, [{ name: this.#STORE_NAME }]);
   }
 
   /**
